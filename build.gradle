@@ -1,0 +1,151 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.9'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'jacoco'
+}
+
+group = 'com.projectManagement'
+version = '0.0.1-SNAPSHOT'
+description = 'Project Management for Purple Merit'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'mysql:mysql-connector-java:8.0.28'
+	implementation 'org.flywaydb:flyway-core:9.5.1'
+	implementation 'org.flywaydb:flyway-mysql:9.5.1'
+
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
+
+
+	// Real-time WebSockets
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	// Redis (cache + pub/sub + rate limiting)
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// MongoDB (collab activity logs)
+//	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+	// Message Queue (pick one)
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'   // RabbitMQ
+	// implementation 'org.springframework.kafka:spring-kafka'          // Kafka alternative
+
+	// OpenAPI Documentation
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+
+	// Observability
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+	testImplementation 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+
+	// Integration tests via containers
+	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:testcontainers'
+	testImplementation 'org.testcontainers:mysql'
+	testImplementation 'org.testcontainers:mongodb'
+
+}
+
+//
+//tasks.named('test') {
+//	useJUnitPlatform()
+//	finalizedBy jacocoTestReport // Generate coverage report after tests
+//}
+
+//// JaCoCo Configuration
+//jacoco {
+//	toolVersion = "0.8.11"
+//}
+
+//jacocoTestReport {
+//	dependsOn test // Run tests before generating report
+//	reports {
+//		xml.required = true
+//		html.required = true
+//		csv.required = false
+//	}
+//
+//	// Exclude only data models, config, and generated code from coverage
+//	// IMPORTANT: controller, service, repository, and Util packages MUST be tested
+//	afterEvaluate {
+//		classDirectories.setFrom(files(classDirectories.files.collect {
+//			fileTree(dir: it, exclude: [
+//				'**/config/**',              // Spring configuration classes
+//				'**/mapper/**',              // MapStruct generated mappers
+//				'**/model/**',               // DTOs and data models (getters/setters only)
+//				'**/entity/**',              // JPA entities (data models)
+//				'**/exception/**',           // Simple exception classes
+//				'**/ProjectManagementApplication.class',  // Main application class
+//				'**/generated/**',           // Generated code
+//				'**/*MapperImpl.class',      // MapStruct generated implementations
+//				'**/*Builder.class'          // Lombok builders
+//				// NOTE: controller, service, repository, and Util are INCLUDED and must be tested
+//			])
+//		}))
+//	}
+//
+//	finalizedBy jacocoTestCoverageVerification
+//}
+
+//// Coverage verification task - enforces minimum coverage thresholds
+//jacocoTestCoverageVerification {
+//	dependsOn jacocoTestReport
+//
+//	violationRules {
+//		rule {
+//			limit {
+//				minimum = 0.10 // 70% minimum coverage
+//			}
+//		}
+//
+//		rule {
+//			element = 'CLASS'
+//			excludes = [
+//				'*.config.*',                    // Configuration classes
+//				'*.mapper.*',                    // MapStruct mappers
+//				'*.model.*',                     // DTOs
+//				'*.entity.*',                     // JPA entities
+//				'*.exception.*',                 // Exception classes
+//				'*.ProjectManagementApplication'  // Main class
+//				// controller, service, repository, Util are INCLUDED
+//			]
+//			limit {
+//				counter = 'LINE'
+//				value = 'COVEREDRATIO'
+//				minimum = 0.10
+//			}
+//		}
+//	}
+//}
